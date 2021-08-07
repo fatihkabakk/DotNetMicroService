@@ -17,6 +17,7 @@ namespace HelloDotnet5
             settings = options.Value;
         }
 
+        // API Response Data Models
         public record Weather(string description);
         public record Main(decimal temp);
         public record Forecast(Weather[] weather, Main main, long dt);
@@ -24,7 +25,6 @@ namespace HelloDotnet5
         public async Task<Forecast> GetCurrentWeatherAsync(string city)
         {
             var forecast = await this.httpClient.GetFromJsonAsync<Forecast>($"https://{settings.OpenWeatherHost}/data/2.5/weather?q={city}&appid={settings.ApiKey}&units=metric");
-            Console.WriteLine(forecast);
             return forecast;
         }
 
