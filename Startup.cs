@@ -32,6 +32,9 @@ namespace HelloDotnet5
             services.AddHttpClient<WeatherClient>()
                 .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(10, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))))
                 .AddTransientHttpErrorPolicy(builder => builder.CircuitBreakerAsync(3, TimeSpan.FromSeconds(10)));
+
+            services.AddHealthChecks()
+                .AddCheck<ExternalEndpointHealthCheck>("OpenWeather");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +54,7 @@ namespace HelloDotnet5
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
         }
     }
